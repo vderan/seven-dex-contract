@@ -1,0 +1,65 @@
+
+1. Clone the smart contract repo and Open the terminal on root directory.
+
+2. Install node modules running this command - npm install
+   Rename .env.example to .env
+
+3. Open .env file and input PRIVATE_KEY and FEE_SETTER.
+   PRIVATE_KEY - your wallet account private key that will be used for the deployment
+   FEE_SETTER - your wallet address that will be used for the deployment
+   FACTORY_FEE_SETTER - your wallet address that will be used for the deployment
+
+4. Fee Contract Deployment
+
+- Open the terminal on root directory and run this command first.
+npx hardhat run scripts/deployFee.js --network polygon
+
+- Get the fee contract address from the terminal and run this command with fee contract address and FEE_SETTER address in .env file.
+npx hardhat verify <fee contract address> --network polygon <FEE_SETTER in .env>
+
+- Replace the value to fee contract address at line 11 in libraries/SevenDexLibrary.sol
+address constant public feeAddress = <fee contract address>
+
+- Replace the value to fee contract address at line 25 in SevenDexPair.sol
+address constant public feeAddress = <fee contract address>
+
+- Save Fee contract address in your note.
+
+-Done.
+
+
+5. Factory contract deployment
+
+- Open the terminal on root directory and run this command.
+npx hardhat run scripts/deployFactory.js --network polygon
+
+- Get the factory contract address from the terminal and run this command with factory contract address.
+npx hardhat verify <factory contract address> --network polygon <FACTORY_FEE_SETTER in .env>
+
+- Input the factory contract address in .env file
+FACTORY_ADDRESS = <factory address>
+
+- Save the factory contract address in your note.
+
+- Done.
+
+
+6. Router contract deployment
+- Please open Factory contract on polygonscan and then get INIT_CODE_PAIR_HASH in read contract part.
+For example:
+9155f3434cdf744f2fb3295b68953bb5e8857e7e95e9e524644e93db291a96c6 (Remove '0x' string)
+
+- Replace the hash with INIT_CODE_PAIR_HASH at 40 line of libraries/SevenDexLibrary.sol
+ hex"9155f3434cdf744f2fb3295b68953bb5e8857e7e95e9e524644e93db291a96c6" // init code hash
+
+- Open the terminal on root directory and run this command.
+npx hardhat run scripts/deployRouter.js --network polygon
+
+- Get the router contract address from the terminal and run this command with factory contract address and wmatic address.
+  Please copy addresses in .env - FACTORY_ADDRESS, WMATIC_ADDRESS
+
+npx hardhat verify <router contract address> --network polygon <factory address> <wmatic address>
+
+- Save the router address in your note.
+
+- Done.
